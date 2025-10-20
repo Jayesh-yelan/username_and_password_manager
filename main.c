@@ -13,9 +13,9 @@ entry* head=NULL;
 entry* make_entry(char* web,char* uname,char *pass)
 {
     entry* temp = (entry*)malloc(sizeof(entry));
-    temp->website_name=web;
-    temp->username=uname;
-    temp->password=pass;
+    strcpy(temp->website_name,web);
+    strcpy(temp->username,uname);
+    strcpy(temp->password,pass);
     temp->next= NULL;
     return temp;
 }
@@ -33,6 +33,27 @@ void add_entry(char* web,char* uname,char *pass)
         q= q->next;
     }
     q->next = make_entry(web,uname,pass);
+}
+
+void search_and_print_by_sitename(char* web)
+{
+    entry* p= head;
+    int found = 0;
+    while(p!=NULL)
+    {
+        if(strstr(p->website_name,web))
+        {
+            printf("--------------------------------------------\n");
+            printf("%s %s %s\n",p->website_name,p->username,p->password);
+            printf("--------------------------------------------\n");
+            found=1;
+        }
+        p=p->next;
+    }
+    if(found)
+    {
+        printf("No match found\n");
+    }
 }
 
 int main()
@@ -73,11 +94,31 @@ int main()
             char line[100];
             while(fgets(line,sizeof(line),ptr2))
             {
+                printf("--------------------------------------------\n");
                 printf("%s",line);
+                printf("--------------------------------------------\n");
             }
             fclose(ptr2);
             break;
         case 3:
+            char web[30];
+            printf("Enter the website name you want the username and password : ");
+            scanf(" %s",web);
+            FILE * ptr3 = fopen("entries.txt","r");
+            char line1[100];
+            char a[30];
+            char b[40];
+            char c[30];
+            
+            while(fgets(line1,sizeof(line1),ptr3))
+            {
+                line[strcspn(line1, "\n")] = '\0';
+                sscanf(line1,"%s %s %s",a,b,c);
+                add_entry(a,b,c);
+            }
+            fclose(ptr3);
+            search_and_print_by_sitename(web);
+            
             break;
         case 4:
             break;
