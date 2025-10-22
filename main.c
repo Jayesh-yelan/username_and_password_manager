@@ -69,15 +69,36 @@ void free_list()
 
 void del_entry(char * webname)
 {
-    while(strstr(head->website_name,webname))
+    while(head!=NULL && strcmp(head->website_name,webname)==0)
     {
         entry* r = head;
         head=head->next;
         free(r);
     }
-    entry* s = head->next;
+    if(head == NULL)
+    {
+        return;
+    }
+    entry* t = head;
+    if(t->next==NULL)
+    {
+        return;
+    }
     
-
+    entry* s = head->next;
+    while(s!=NULL)
+    {
+        if(strcmp(s->website_name,webname)==0)
+        {
+            t->next = s->next;
+            free(s);
+            s=t->next;
+        }
+        else{
+            t=s;
+            s=s->next;
+        }
+    }
 }
 int main()
 {
@@ -159,6 +180,16 @@ int main()
                 sscanf(line2,"%s %s %s",d,e,f);
                 add_entry(d,e,f);
             }
+            fclose(ptr4);
+            del_entry(web_del);
+            ptr4 = fopen("entries.txt","w");
+            entry* u = head;
+            while(u!=NULL)
+            {
+                fprintf(ptr4,"%s %s %s\n",u->website_name,u->username,u->password);
+                u=u->next;
+            }
+            free_list();
             fclose(ptr4);
 
             
