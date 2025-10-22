@@ -100,6 +100,11 @@ void del_entry(char * webname)
         }
     }
 }
+void clear_input_buffer()
+{
+    int c;
+    while((c=getchar()) != '\n'&& c!= EOF);
+}
 int main()
 {
   int running = 1;
@@ -116,22 +121,26 @@ int main()
       printf("Press 5 to exit \n");
       printf("============================================\n");
       scanf("%d",&choise);
-
+      clear_input_buffer();
       switch(choise)
       {
         case 1:
-            entry* e1;
-            e1 = (entry*)malloc(sizeof(entry));
+            char f[30];
+            char g[40];
+            char h[30];
             printf("Enter the website name : ");
-            scanf("%s",e1->website_name);
+            fgets(f,30,stdin);
+            f[strcspn(f, "\n")] = '\0';
             printf("Enter the username : ");
-            scanf("%s",e1->username);
+            fgets(g,40,stdin);
+            g[strcspn(g, "\n")] = '\0';
             printf("Enter the password : ");
-            scanf("%s",e1->password);
+            fgets(h,30,stdin);
+            h[strcspn(h, "\n")] = '\0';
             FILE* ptr = fopen("entries.txt","a");
-            fprintf(ptr,"%s %s %s\n",e1->website_name,e1->username,e1->password);
+            fprintf(ptr,"%s %s %s\n",f,g,h);
             fclose(ptr);
-            free(e1);
+            
             break;
         case 2:
             FILE * ptr2 = fopen("entries.txt","r");
