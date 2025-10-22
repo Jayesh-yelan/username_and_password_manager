@@ -46,16 +46,39 @@ void search_and_print_by_sitename(char* web)
             printf("--------------------------------------------\n");
             printf("%s %s %s\n",p->website_name,p->username,p->password);
             printf("--------------------------------------------\n");
-            found=1;
+            found = 1;
         }
         p=p->next;
     }
-    if(found)
+    if(found==0)
     {
+        printf("--------------------------------------------\n");
         printf("No match found\n");
+        printf("--------------------------------------------\n");
+    }
+}
+void free_list()
+{
+    while(head!=NULL)
+    {
+        entry* p = head;
+        head = head->next;
+        free(p);
     }
 }
 
+void del_entry(char * webname)
+{
+    while(strstr(head->website_name,webname))
+    {
+        entry* r = head;
+        head=head->next;
+        free(r);
+    }
+    entry* s = head->next;
+    
+
+}
 int main()
 {
   int running = 1;
@@ -112,15 +135,33 @@ int main()
             
             while(fgets(line1,sizeof(line1),ptr3))
             {
-                line[strcspn(line1, "\n")] = '\0';
+                line1[strcspn(line1, "\n")] = '\0';
                 sscanf(line1,"%s %s %s",a,b,c);
                 add_entry(a,b,c);
             }
             fclose(ptr3);
             search_and_print_by_sitename(web);
-            
+            free_list();
             break;
         case 4:
+            char web_del[30];
+            printf("Enter the website name you want to delete the entry : ");
+            scanf(" %s",web_del);
+            FILE * ptr4 = fopen("entries.txt","r");
+            char line2[100];
+            char d[30];
+            char e[40];
+            char f[30];
+
+            while (fgets(line2,sizeof(line2),ptr4))     
+            {
+                line2[strcspn(line2, "\n")] = '\0';
+                sscanf(line2,"%s %s %s",d,e,f);
+                add_entry(d,e,f);
+            }
+            fclose(ptr4);
+
+            
             break;
         case 5:
             running = 0;
@@ -128,9 +169,6 @@ int main()
         default:
             running = 0;
             break;
-      }
-      
-
+      }     
     }
-  
 }
